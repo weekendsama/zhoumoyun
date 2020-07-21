@@ -126,6 +126,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# 腾讯云短信设置
+TENCENT_SMS_APP_ID = 1400401328
+TENCENT_SMS_APP_KEY = '056b0aeafb632518ca034da09d0d97a0'
+TENCENT_SMS_SIGN = '周末的小站'
 # 使用本地设置覆盖设置。
 try:
     from .local_settings import *
