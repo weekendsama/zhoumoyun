@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from web.forms.accounts import RegisterModelForm, SendSmsForm
+from web.forms.accounts import RegisterModelForm, SendSmsForm, LoginSMSForm
 from django.http import JsonResponse
 
 
@@ -25,3 +25,8 @@ def send_sms(request):
     if form.is_valid():
         return JsonResponse({'status': True})
     return JsonResponse({'status': False, 'error': form.errors})
+
+
+def login_sms(request):
+    form = LoginSMSForm()
+    return render(request, 'web/login_sms.html', {'form': form})
