@@ -1,5 +1,7 @@
 {% extends 'web/layout/basic.html' %}
 {% load static %}
+{% block title %}用户注册{% endblock %}
+
 {% block css %}
     <link rel="stylesheet" href="{% static 'web/css/account.css' %}">
     <style>
@@ -14,7 +16,7 @@
 {% block content %}
     <div class="account">
         <div class="title">用户注册</div>
-        <form id="form" method="POST" novalidate>
+        <form id="regForm" method="POST" novalidate>
             {% csrf_token %}
             {% for field in form %}
                 {% if field.name == 'code' %}
@@ -41,7 +43,7 @@
 
             <div class="row">
                 <div class="col-xs-3">
-                    <input id="submit" type="button" class="btn btn-primary" value="注 册">
+                    <input id="btnSubmit" type="button" class="btn btn-primary" value="注 册">
                 </div>
             </div>
         </form>
@@ -53,7 +55,26 @@
         // 页面加载完自动执行函数
         $(function () {
                 bindClickBtnSms();
+                bindClickBtnSubmit();
             });
+        /*
+        点击提交注册
+        */
+        function bindClickBtnSubmit() {
+            $('#btnSubmit').click(function () {
+
+                // ajax数据发送
+                $.ajax({
+                    url: "{% url 'web:register' %}",
+                    type: "POST",
+                    data: $('#regForm').serialize(),   // 格式化发送
+                    dataType: "JSON",
+                    success: function (res) {
+                        console.log(res);
+                    }
+                })
+            })
+        }
         /*
         点击获取验证码按钮事件
         */

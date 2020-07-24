@@ -4,8 +4,15 @@ from django.http import JsonResponse
 
 
 def register(request):
-    form = RegisterModelForm()
-    return render(request, 'web/register.html', {'form': form})
+    if request.method == 'GET':
+        form = RegisterModelForm()
+        return render(request, 'web/register.html', {'form': form})
+    form = RegisterModelForm(data=request.POST)
+    if form.is_valid():
+        form.save()
+    else:
+        print(form.errors)
+    return JsonResponse({})
 
 
 def send_sms(request):
@@ -18,4 +25,3 @@ def send_sms(request):
     if form.is_valid():
         return JsonResponse({'status': True})
     return JsonResponse({'status': False, 'error': form.errors})
-
