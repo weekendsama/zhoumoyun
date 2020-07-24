@@ -73,7 +73,7 @@
                     success: function (res) {
                         // ajax请求发送成功后自动回调
                         if (res.status){
-                            console.log('发送成功，倒计时')
+                            sendSmsRemind();
                         }else {
                             // 错误信息
                             // console.log(res);
@@ -84,6 +84,23 @@
                     }
                 })
             })
+        }
+        /*
+        倒计时函数
+         */
+        function sendSmsRemind() {
+            var $smsBtn = $('#btnSms');
+            $smsBtn.prop('disabled', true);
+            var time = 60;
+            var remind = setInterval(function () {
+                $smsBtn.val(time + '秒后重新发送');
+                time = time - 1;
+                if (time < 1){
+                    clearInterval(remind);
+                    $smsBtn.val('点击获取验证码').prop('disabled', false);
+                }
+
+            }, 1000)
         }
     </script>
 {% endblock %}
