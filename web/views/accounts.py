@@ -7,12 +7,12 @@ def register(request):
     if request.method == 'GET':
         form = RegisterModelForm()
         return render(request, 'web/register.html', {'form': form})
+
     form = RegisterModelForm(data=request.POST)
     if form.is_valid():
         form.save()
-    else:
-        print(form.errors)
-    return JsonResponse({})
+        return JsonResponse({'status': True, 'data': '/login/'})
+    return JsonResponse({'status': False, 'error': form.errors})
 
 
 def send_sms(request):

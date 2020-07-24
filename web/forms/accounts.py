@@ -62,8 +62,8 @@ class RegisterModelForm(forms.ModelForm):
         return encrypt.md5(password)
 
     def clean_confirm_password(self):
-        password = encrypt.md5(self.cleaned_data['password'])
-        confirm_password = self.cleaned_data['confirm_password']
+        password = self.cleaned_data.get('password')
+        confirm_password = encrypt.md5(self.cleaned_data['confirm_password'])
         if password != confirm_password:
             raise ValidationError('两次密码不一致')
 

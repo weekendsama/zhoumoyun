@@ -8,6 +8,7 @@
         .error-msg{
             color: red;
             position: absolute;
+            font-size: 13px;
         }
     </style>
 {% endblock %}
@@ -62,7 +63,7 @@
         */
         function bindClickBtnSubmit() {
             $('#btnSubmit').click(function () {
-
+                $('.error-msg').empty();
                 // ajax数据发送
                 $.ajax({
                     url: "{% url 'web:register' %}",
@@ -70,7 +71,13 @@
                     data: $('#regForm').serialize(),   // 格式化发送
                     dataType: "JSON",
                     success: function (res) {
-                        console.log(res);
+                        if(res.status){
+                            location.href = res.data;
+                        }else {
+                            $.each(res.error, function (key, value) {
+                                $("#id_" + key).next().text(value[0]);
+                            })
+                        }
                     }
                 })
             })
