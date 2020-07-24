@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     # 自己的app
     'blog.apps.BlogConfig',
+    'web.apps.WebConfig',
 ]
 
 MIDDLEWARE = [
@@ -110,9 +111,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -130,6 +131,10 @@ STATIC_URL = '/static/'
 TENCENT_SMS_APP_ID = 1400401328
 TENCENT_SMS_APP_KEY = '056b0aeafb632518ca034da09d0d97a0'
 TENCENT_SMS_SIGN = '周末的小站'
+TENCENT_SMS_TEMPLATE = {
+    'register': 668506,
+    'login': 668504,
+}
 # 使用本地设置覆盖设置。
 try:
     from .local_settings import *
