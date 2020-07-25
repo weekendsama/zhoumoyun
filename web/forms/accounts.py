@@ -125,3 +125,9 @@ class LoginSMSForm(BootStrapForm, forms.Form):
         if not exists:
             raise ValidationError('手机号不存在')
         return phone_num
+
+
+class LoginForm(BootStrapForm, forms.Form):
+    username = forms.CharField(label='用户名')
+    password = forms.CharField(label='密码', widget=forms.PasswordInput())
+    code = forms.CharField(label='图片验证码')
