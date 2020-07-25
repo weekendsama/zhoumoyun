@@ -34,7 +34,11 @@ def login_sms(request):
         return render(request, 'web/login_sms.html', {'form': form})
     form = LoginSMSForm(request.POST)
     if form.is_valid():
-        return JsonResponse({'status': True, 'data': '/index/'})
+        phone_num = form.cleaned_data['phone_num']
+        user_obj = models.UserModel.objects.filter(phone_num=phone_num).first()
+        request.session['user_id'] = user_obj.id
+        request.session.set_expiry(60*60*24*14)
+        return JsonResponse({'status': True, 'data': '/'})
     return JsonResponse({'status': False, 'error': form.errors})
 
 
@@ -50,6 +54,8 @@ def login(request):
         user_obj = models.UserModel.objects.filter(Q(email=username) | Q(phone_num=username)).\
             filter(password=password).first()
         if user_obj:
+            request.session['user_id'] = user_obj.id
+            request.session.set_expiry(60*60*24*14)
             return redirect('index')
         form.add_error('username', '用户名或密码错误')
     return render(request, 'web/login.html', {'form': form})
