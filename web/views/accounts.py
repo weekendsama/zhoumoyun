@@ -28,5 +28,10 @@ def send_sms(request):
 
 
 def login_sms(request):
-    form = LoginSMSForm()
-    return render(request, 'web/login_sms.html', {'form': form})
+    if request.method == 'GET':
+        form = LoginSMSForm()
+        return render(request, 'web/login_sms.html', {'form': form})
+    form = LoginSMSForm(request.POST)
+    if form.is_valid():
+        return JsonResponse({'status': True, 'data': '/index/'})
+    return JsonResponse({'status': False, 'error': form.errors})

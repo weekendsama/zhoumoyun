@@ -27,7 +27,7 @@ class RegisterModelForm(BootStrapForm, forms.ModelForm):
                                            'max_length': '重复密码长度不能长于32个字符',
                                        },
                                        widget=forms.PasswordInput())
-    code = forms.CharField(label='验证码')
+    code = forms.CharField(label='验证码', widget=forms.TextInput())
 
     class Meta:
         model = models.UserModel
@@ -118,3 +118,10 @@ class SendSmsForm(forms.Form):
 class LoginSMSForm(BootStrapForm, forms.Form):
     phone_num = forms.CharField(label='手机号', validators=[RegexValidator(r'^(1[3|4|5|6|7|8|9])\d{9}$', '手机号格式错误'), ])
     code = forms.CharField(label='验证码')
+
+    def clean_phone_num(self):
+        phone_num = self.cleaned_data['phone_num']
+        exists = models.UserModel.objects.filter(phone_num=phone_num).exists()
+        if not exists:
+            raise ValidationError('手机号不存在')
+        return phone_num

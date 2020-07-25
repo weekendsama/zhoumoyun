@@ -56,7 +56,32 @@
         // 页面加载完自动执行函数
         $(function () {
                 bindClickBtnSms();
+                bindClickBtnSubmit();
             });
+                /*
+        点击登录
+        */
+        function bindClickBtnSubmit() {
+            $('#btnSubmit').click(function () {
+                $('.error-msg').empty();
+                // ajax数据发送
+                $.ajax({
+                    url: "{% url 'web:login_sms' %}",
+                    type: "POST",
+                    data: $('#smsForm').serialize(),   // 格式化发送
+                    dataType: "JSON",
+                    success: function (res) {
+                        if(res.status){
+                            location.href = res.data;
+                        }else {
+                            $.each(res.error, function (key, value) {
+                                $("#id_" + key).next().text(value[0]);
+                            })
+                        }
+                    }
+                })
+            })
+        }
         /*
         点击获取验证码按钮事件
         */
