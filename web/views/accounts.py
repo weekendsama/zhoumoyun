@@ -56,7 +56,7 @@ def login(request):
         if user_obj:
             request.session['user_id'] = user_obj.id
             request.session.set_expiry(60*60*24*14)
-            return redirect('index')
+            return redirect('web:home')
         form.add_error('username', '用户名或密码错误')
     return render(request, 'web/login.html', {'form': form})
 
@@ -72,3 +72,8 @@ def image_code(request):
     stream = BytesIO()
     image_object.save(stream, 'png')
     return HttpResponse(stream.getvalue())
+
+
+def logout(request):
+    request.session.flush()
+    return redirect('web:home')
