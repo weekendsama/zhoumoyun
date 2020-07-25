@@ -1,6 +1,7 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 from web.forms.accounts import RegisterModelForm, SendSmsForm, LoginSMSForm, LoginForm
 from django.http import JsonResponse
+from web import models
 
 
 def register(request):
@@ -38,7 +39,19 @@ def login_sms(request):
 
 
 def login(request):
-    form = LoginForm()
+    if request.method == 'GET':
+        form = LoginForm(request)
+        return render(request, 'web/login.html', {'form': form})
+    form = LoginForm(request, data=request.POST)
+    if form.is_valid():
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        from django.db.models import Q
+        user_obj = models.UserModel.objects.filter(Q(email=username) | Q(phone_num=username)).\
+            filter(password=password).first()
+        if user_obj:
+            return redirect('index')
+        form.add_error('username', '用户名或密码错误')
     return render(request, 'web/login.html', {'form': form})
 
 

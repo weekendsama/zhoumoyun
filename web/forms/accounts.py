@@ -128,6 +128,23 @@ class LoginSMSForm(BootStrapForm, forms.Form):
 
 
 class LoginForm(BootStrapForm, forms.Form):
-    username = forms.CharField(label='用户名')
+    username = forms.CharField(label='邮箱或手机号')
     password = forms.CharField(label='密码', widget=forms.PasswordInput())
     code = forms.CharField(label='图片验证码')
+
+    def __init__(self, request, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.request = request
+
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        return encrypt.md5(password)
+
+    def clean_code(self):
+        code = self.cleaned_data['code']
+        session_code = self.request.session.get('image_code')
+        if not session_code:
+            raise ValidationError('验证码已过期请重新获取')
+        if code.strip().upper() != session_code:
+            raise ValidationError('验证码错误')
+        return code
