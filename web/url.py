@@ -1,6 +1,7 @@
 from django.urls import path
 from web.views import accounts
 from web.views import index
+from web.views import project
 
 app_name = 'web'
 urlpatterns = [
@@ -11,4 +12,5 @@ urlpatterns = [
     path('image/code/', accounts.image_code, name='image_code'),
     path('', index.home, name='home'),
     path('logout/', accounts.logout, name='logout'),
+    path('project/list/', project.project_list, name='manage_center')
 ]

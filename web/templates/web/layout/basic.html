@@ -7,56 +7,58 @@
     <link rel="stylesheet" href="{% static 'web/plugin/bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'web/plugin/font-awesome/css/font-awesome.min.css' %}">
     <style>
-        .navbar-default{
+        .navbar-default {
             border-radius: 0;
         }
     </style>
     {% block css %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-default">
-  <div class="container">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="{% url 'web:home' %}">周 末 小 站</a>
-    </div>
+<nav class="navbar navbar-default">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'web:home' %}">周 末 小 站</a>
+        </div>
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li><a href="#">博 客</a></li>
-        <li><a href="#">介 绍</a></li>
-        <li><a href="#">小 程 序</a></li>
-        <li><a href="#">公 众 号</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        {% if request.auth %}
-            <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ request.auth.username }} <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-            <li><a href="#">管理中心</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="{% url 'web:logout' %}">注销登录</a></li>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="#">博 客</a></li>
+                <li><a href="#">介 绍</a></li>
+                <li><a href="#">小 程 序</a></li>
+                <li><a href="#">公 众 号</a></li>
             </ul>
-            </li>
-        {% else %}
-        <li><a href="{% url 'web:login' %}">登 录</a></li>
-        <li><a href="{% url 'web:register' %}">注 册</a></li>
-        {% endif %}
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+            <ul class="nav navbar-nav navbar-right">
+                {% if request.auth %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">{{ request.auth.user }} <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'web:manage_center' %}">管理中心</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{% url 'web:logout' %}">注销登录</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li><a href="{% url 'web:login' %}">登 录</a></li>
+                    <li><a href="{% url 'web:register' %}">注 册</a></li>
+                {% endif %}
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
 </nav>
-    {% block content %}{% endblock %}
+{% block content %}{% endblock %}
 
-    <script src="{% static 'web/js/jquery-3.5.1.min.js' %}"></script>
-    <script src="{% static 'web/plugin/bootstrap/js/bootstrap.min.js' %}"></script>
-    {% block js %}{% endblock %}
+<script src="{% static 'web/js/jquery-3.5.1.min.js' %}"></script>
+<script src="{% static 'web/plugin/bootstrap/js/bootstrap.min.js' %}"></script>
+{% block js %}{% endblock %}
 </body>
 </html>

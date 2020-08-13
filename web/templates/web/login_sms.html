@@ -5,7 +5,7 @@
 {% block css %}
     <link rel="stylesheet" href="{% static 'web/css/account.css' %}">
     <style>
-        .error-msg{
+        .error-msg {
             color: red;
             position: absolute;
             font-size: 13px;
@@ -59,12 +59,13 @@
     <script>
         // 页面加载完自动执行函数
         $(function () {
-                bindClickBtnSms();
-                bindClickBtnSubmit();
-            });
-                /*
-        点击登录
-        */
+            bindClickBtnSms();
+            bindClickBtnSubmit();
+        });
+
+        /*
+点击登录
+*/
         function bindClickBtnSubmit() {
             $('#btnSubmit').click(function () {
                 $('.error-msg').empty();
@@ -75,9 +76,9 @@
                     data: $('#smsForm').serialize(),   // 格式化发送
                     dataType: "JSON",
                     success: function (res) {
-                        if(res.status){
+                        if (res.status) {
                             location.href = res.data;
-                        }else {
+                        } else {
                             $.each(res.error, function (key, value) {
                                 $("#id_" + key).next().text(value[0]);
                             })
@@ -86,6 +87,7 @@
                 })
             })
         }
+
         /*
         点击获取验证码按钮事件
         */
@@ -104,9 +106,9 @@
                     dataType: "JSON", //数据反序列化为字典
                     success: function (res) {
                         // ajax请求发送成功后自动回调
-                        if (res.status){
+                        if (res.status) {
                             sendSmsRemind();
-                        }else {
+                        } else {
                             // 错误信息
                             // console.log(res);
                             $.each(res.error, function (key, value) {
@@ -117,6 +119,7 @@
                 })
             })
         }
+
         /*
         倒计时函数
          */
@@ -127,7 +130,7 @@
             var remind = setInterval(function () {
                 $smsBtn.val(time + '秒后重新发送');
                 time = time - 1;
-                if (time < 1){
+                if (time < 1) {
                     clearInterval(remind);
                     $smsBtn.val('点击获取验证码').prop('disabled', false);
                 }

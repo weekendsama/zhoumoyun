@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'c5yh9kl*9!1v-uc)vx@oywqe(ws3o7b-)wwbkt+i1g4gptw@yx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -136,6 +136,12 @@ TENCENT_SMS_TEMPLATE = {
     'register': 668506,
     'login': 668504,
 }
+
+BLACK_URL_LIST = [
+    '/logout/',
+    '/project/list/'
+]
+
 # 使用本地设置覆盖设置。
 try:
     from .local_settings import *
