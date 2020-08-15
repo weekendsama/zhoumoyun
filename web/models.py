@@ -57,8 +57,6 @@ class Project(models.Model):
     desc = models.CharField(verbose_name='项目描述', max_length=255, null=True, blank=True)
     used_space = models.IntegerField(verbose_name='项目已用空间', default=0)
     star = models.BooleanField(verbose_name='星标', default=False)
-    bucket = models.CharField(verbose_name='腾讯对象存储器', max_length=128)
-    region = models.CharField(verbose_name='腾讯对象存储器区域', max_length=32)
     join_count = models.SmallIntegerField(verbose_name='参与人数', default=1)
     creator = models.ForeignKey(verbose_name='创建者', to='UserModel', on_delete=models.CASCADE)
     create_datetime = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
