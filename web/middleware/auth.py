@@ -9,6 +9,7 @@ class Auth(object):
     def __init__(self):
         self.user = None
         self.price_policy = None
+        self.project = None
 
 
 class AuthMiddleWare(MiddlewareMixin):
@@ -29,3 +30,18 @@ class AuthMiddleWare(MiddlewareMixin):
         if obj.end_datetime and obj.end_datetime < current_datetime:
             obj = models.Transaction.objects.filter(user=user_obj, status=2, price_policy__category=1).first()
         request.auth.price_policy = obj.price_policy
+
+    def process_view(self, request, view, args, kwargs):
+        if not request.path_info.startswith('/manage/'):
+            return None
+        project_id = kwargs.get('project_id')
+        project_obj = models.Project.objects.filter(creator=request.auth.user, id=project_id).first()
+        if project_obj:
+            request.auth.project = project_obj
+            return None
+
+        project_user_obj = models.ProjectUser.objects.filter(user=request.auth.user, project_id=project_id).first()
+        if project_user_obj:
+            request.auth.project = project_user_obj.project
+            return None
+        return redirect('web:manage_center')

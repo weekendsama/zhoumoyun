@@ -3,6 +3,7 @@ from web.views import accounts
 from web.views import index
 from web.views import project
 from web.views import manage
+from web.views import wiki
 
 app_name = 'web'
 urlpatterns = [
@@ -25,7 +26,9 @@ urlpatterns = [
         path('issues/', manage.issues, name='issues'),
         path('statistics/', manage.statistics, name='statistics'),
         path('file/', manage.file, name='file'),
-        path('wiki/', manage.wiki, name='wiki'),
+        path('wiki/', wiki.wiki, name='wiki'),
+        path('wiki/add/', wiki.wiki_add, name='wiki_add'),
+
         path('settings/', manage.settings, name='settings'),
     ])),
 ]

@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render
 
 
 def dashboard(request, project_id):
@@ -6,20 +6,16 @@ def dashboard(request, project_id):
 
 
 def issues(request, project_id):
-    pass
+    return render(request, 'web/issues.html')
 
 
 def statistics(request, project_id):
-    pass
+    return render(request, 'web/statistics.html')
 
 
 def file(request, project_id):
-    pass
-
-
-def wiki(request, project_id):
-    pass
+    return render(request, 'web/file.html')
 
 
 def settings(request, project_id):
-    pass
+    return render(request, 'web/settings.html')
