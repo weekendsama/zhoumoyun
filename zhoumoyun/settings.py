@@ -123,9 +123,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # 腾讯云短信设置
-TENCENT_SMS_APP_ID = 1400401328
-TENCENT_SMS_APP_KEY = '056b0aeafb632518ca034da09d0d97a0'
-TENCENT_SMS_SIGN = '周末的小站'
+TENCENT_SMS_APP_ID = 111111
+TENCENT_SMS_APP_KEY = 'key'
+TENCENT_SMS_SIGN = 'sign'
 TENCENT_SMS_TEMPLATE = {
     'register': 668506,
     'login': 668504,
@@ -137,7 +137,9 @@ BLACK_URL_LIST = [
     'project/star/<str:project_type>/<int:project_id>/',
     'project/unstar/<str:project_type>/<int:project_id>/'
 ]
-
+TENCENT_COS_ID = 'ID'
+TENCENT_COS_KEY = 'KEY'
+X_FRAME_OPTIONS = 'SOMEORIGIN'
 # 使用本地设置覆盖设置。
 try:
     from .local_settings import *

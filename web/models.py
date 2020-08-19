@@ -61,6 +61,8 @@ class Project(models.Model):
     join_count = models.SmallIntegerField(verbose_name='参与人数', default=1)
     creator = models.ForeignKey(verbose_name='创建者', to='UserModel', on_delete=models.CASCADE)
     create_datetime = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+    bucket = models.CharField(verbose_name='COS桶', max_length=128)
+    region = models.CharField(verbose_name='桶区域', max_length=32)
 
 
 class ProjectUser(models.Model):
@@ -82,3 +84,21 @@ class Wiki(models.Model):
     content = models.TextField(verbose_name='内容')
     parent = models.ForeignKey(verbose_name='父级文章', to='self', null=True, blank=True, on_delete=models.CASCADE,
                                related_name='children')
+    depth = models.IntegerField(verbose_name='深度', default=1)
+
+
+class FileRepository(models.Model):
+    project = models.ForeignKey(verbose_name='项目名', to=Project, on_delete=models.CASCADE)
+    file_type_choices = (
+        (1, '文件'),
+        (2, '文件夹')
+    )
+    file_type = models.SmallIntegerField(verbose_name='文件类型', choices=file_type_choices)
+    name = models.CharField(verbose_name='文件名称', max_length=32, help_text='文件/文件夹名称')
+    key = models.CharField(verbose_name='文件存储在cos中的KEY', max_length=128, null=True, blank=True)
+    file_size = models.IntegerField(verbose_name='文件大小', null=True, blank=True)
+    file_path = models.CharField(verbose_name='文件路径', max_length=255, null=True, blank=True)
+    parent = models.ForeignKey(verbose_name='父级目录', to='self', related_name='child', on_delete=models.CASCADE,
+                               null=True, blank=True)
+    update_user = models.ForeignKey(verbose_name='更新者', to='UserModel', on_delete=models.CASCADE)
+    update_datetime = models.DateTimeField(verbose_name='更新时间', auto_now=True)

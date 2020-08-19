@@ -2,6 +2,8 @@ from django.shortcuts import render, HttpResponse, redirect
 from web.forms.project import ProjectModelForm
 from django.http import JsonResponse
 from web import models
+from utils.tencent.cos import create_bucket
+import time
 
 
 def project_list(request):
@@ -26,6 +28,13 @@ def project_list(request):
 
     form = ProjectModelForm(request, data=request.POST)
     if form.is_valid():
+        # 创建桶与区域
+        bucket = '{}-{}-1302697284'.format(request.auth.user.phone_num,
+                                           str(int(time.time() * 1000)))
+        region = 'ap-nanjing'
+        create_bucket(bucket, region)
+        form.instance.region = region
+        form.instance.bucket = bucket
         form.instance.creator = request.auth.user
         form.save()
         return JsonResponse({'status': True})
@@ -53,4 +62,3 @@ def project_un_star(request, project_type, project_id):
         return redirect('web:manage_center')
 
     return HttpResponse('请求错误')
-

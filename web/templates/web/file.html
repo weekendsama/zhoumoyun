@@ -1,1 +1,257 @@
 {% extends 'web/layout/manage.html' %}
+
+{% block css %}
+    <style>
+        .panel-default .panel-heading {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .panel-default > .panel-heading a {
+            text-decoration: none;
+        }
+
+        .panel-default > .panel-heading span {
+            padding: 0 5px;
+        }
+
+        .panel-default > .panel-heading .function .upload {
+            overflow: hidden;
+        }
+
+        .panel-default > .panel-heading .function .upload input {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 76px;
+            left: -2px;
+            overflow: hidden;
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <div>
+                    <a href="{% url 'web:file' project_id=request.auth.project.id %}">
+                        <i class="fa fa-home" aria-hidden="true"></i>
+                        <span>文档库</span>
+                    </a>
+                    {% for record in breadcrumb_list %}
+                        <a href="{% url 'web:file' project_id=request.auth.project.id %}?folder={{ record.id }}">
+                            <i class="fa fa-caret-right" aria-hidden="true"></i>
+                            <span>{{ record.name }}</span>
+                        </a>
+                    {% endfor %}
+                </div>
+                <div class="function">
+                    <div class="btn btn-primary btn-xs upload" style="position: relative">
+                        <div><i class="fa fa-upload" aria-hidden="true"></i> 上传文件</div>
+                        <input type="file" multiple name="uploadFile" id="uploadFile">
+                    </div>
+                    <a type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#addModal"
+                       data-nickname="新建文件夹">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i> 新建文件夹
+                    </a>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>名称</th>
+                    <th>文件大小</th>
+                    <th>更新者</th>
+                    <th>更新时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in file_object_list %}
+                    <tr>
+                        <td>
+                            {% if item.file_type == 1 %}
+                                <i class="fa fa-file" aria-hidden="true"></i>
+                                {{ item.name }}
+                            {% else %}
+                                <a href="{% url 'web:file' project_id=request.auth.project.id %}?folder={{ item.id }}">
+                                    <i class="fa fa-folder" aria-hidden="true"></i>
+                                    {{ item.name }}
+                                </a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.file_type == 1 %}
+                                {{ item.file_size }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ item.update_user.username }}
+                        </td>
+                        <td>
+                            {{ item.update_datetime }}
+                        </td>
+                        <td>
+                            {% if item.file_type == 2 %}
+                                <a class="btn btn-default btn-xs"
+                                   data-toggle="modal"
+                                   data-target="#addModal"
+                                   data-name="{{ item.name }}"
+                                   data-fid="{{ item.id }}"
+                                   data-nickname="修改文件夹">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                </a>
+                            {% endif %}
+                            <a class="btn btn-danger btn-xs" data-toggle="modal"
+                               data-fid="{{ item.id }}"
+                               data-target="#alertModal">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="form">
+                        {% csrf_token %}
+                        <input class="hidden" type="text" name="fid" id="fid">
+                        {% for field in form %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                <span class="error-msg">{{ field.errors.0 }}</span>
+                            </div>
+                        {% endfor %}
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                    <button id="BtnFormSubmit" type="button" class="btn btn-primary">确 定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="alert alert-danger alert-dismissable fade in" role="alert">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">x</span>
+                </button>
+                <h4>是否要确定删除?</h4>
+                <p style="padding-top: 20px;padding-bottom: 20px">
+                    文件夹中所包含的所有文件都会被删除
+                </p>
+                <p style="text-align: right;">
+                    <a class="btn btn-default btn-sm" data-dismiss="modal" aria-label="Close">取 消</a>
+                    <button id="btnDelete" type="button" class="btn btn-danger btn-sm">确 定</button>
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        const FOLDER_URL = '{% url 'web:file' project_id=request.auth.project.id %}'
+        const FOLDER_DELETE_URL = '{% url 'web:file_delete' project_id=request.auth.project.id %}'
+        $(function () {
+            initAddModal();
+            BindBtnFormSubmit();
+            BindDeleteSubmit();
+            BindUploadFile();
+        });
+
+        function initAddModal() {
+            $('#addModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var recipient = button.data('nickname') // Extract info from data-* attributes
+                var name = button.data('name')
+                var fid = button.data('fid')
+                var modal = $(this)
+                modal.find('.modal-title').text(recipient)
+                if (fid) {
+                    modal.find('#id_name').val(name);
+                    modal.find('#fid').val(fid);
+                } else {
+                    modal.find('.error-msg').empty();
+                    $('#form')[0].reset();
+                }
+            });
+            $('#alertModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var fid = button.data('fid');
+                $('#btnDelete').attr('fid', fid);
+            })
+        }
+
+        function BindBtnFormSubmit() {
+            $('#BtnFormSubmit').click(function () {
+                $.ajax({
+                    url: FOLDER_URL,
+                    type: "POST",
+                    data: $("#form").serialize(),
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            location.href = location.href;
+                        } else {
+                            $.each(res.error, function (key, value) {
+                                $('#id_' + key).next().text(value[0]);
+                            })
+                        }
+                    }
+                })
+            })
+        }
+
+        function BindDeleteSubmit() {
+            $('#btnDelete').click(function () {
+                $.ajax({
+                    url: FOLDER_DELETE_URL,
+                    type: 'GET',
+                    data: {fid: $(this).attr('fid')},
+                    success: function (res) {
+                        if (res.status) {
+                            location.href = location.href;
+                        }
+                    }
+                })
+            })
+        }
+
+        function BindUploadFile() {
+            // 获取临时凭证
+            $('#uploadFile').change(function () {
+                var filelist = $(this)[0].files;
+                $.each(filelist, function (index, fileObject) {
+                    console.log(fileObject.name);
+                })
+            })
+        }
+    </script>
+{% endblock %}
+

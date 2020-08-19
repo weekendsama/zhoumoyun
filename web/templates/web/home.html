@@ -3,7 +3,31 @@
 
 {% block title %} 首页 {% endblock %}
 
-{% block css %}{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'web/plugin/Aplayer/APlayer.min.css' %}">
+{% endblock %}
 {% block content %}
-    <div><h1>网站主页</h1></div>{% endblock %}
-{% block js %}{% endblock %}
+    <div><h1>网站主页</h1>
+        <div id="aplayer"></div>
+    </div>{% endblock %}
+{% block js %}
+    <script src="{% static 'web/plugin/Aplayer/APlayer.min.js' %}"></script>
+    <script>
+        $(function () {
+            initAplayer();
+        });
+
+        function initAplayer() {
+            const ap = new APlayer({
+                container: document.getElementById('aplayer'),
+                fixed: true,
+                audio: [{
+                    name: 'name',
+                    artist: 'artist',
+                    url: 'https://m701.music.126.net/20200816221442/2987c0db4c53a726ee8ad8ac47c18a44/jdyyaac/065f/0552/0e08/15b303bd5e288591ea6d9b2ee9efa0d2.m4a',
+                    cover: 'http://p1.music.126.net/3W8PiIGvLvQvRaGLlt_jEQ==/109951163627944219.jpg?param=130y130'
+                }]
+            });
+        }
+    </script>
+{% endblock %}
